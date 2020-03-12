@@ -1,7 +1,44 @@
-{{ title }}
-{{ token }}
-{{ request_id }}
-{{ result }}
-
-
-
+<div class="example-container">
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Enter your username</mat-label>
+            <input matInput [(ngModel)]="username">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+        <button (click)="authorize()" mat-button>Authorize</button>
+    </div>
+    <div>
+        <mat-form-field appearance="fill">
+            <textarea matInput [(ngModel)]="token"></textarea>
+        </mat-form-field>
+    </div>
+    <div>
+        <button (click)="loadCDM()" mat-button>Load CDM</button>
+        <div>
+            <pre>{{ riskBody | json }}</pre>
+        </div>
+    </div>
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Enter backend IP and Port</mat-label>
+            <input matInput type="text" [(ngModel)]="baseUrl">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Enter endpoint</mat-label>
+            <input matInput type="text" [(ngModel)]="endpoint">
+        </mat-form-field>
+        <button (click)="send()" mat-button>Send request</button>
+    </div>
+    <div>
+        <pre>{{ request_id }}</pre>
+    </div>
+    <div>
+        <pre>{{ result | json }}</pre>
+    </div>
+</div>

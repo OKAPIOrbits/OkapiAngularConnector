@@ -8,10 +8,22 @@ import { FileService } from './services/file.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'OkapiAngularConnector';
-  baseUrl = <Add the OKAPI URL and Port here like so 'http://IP:Port>';
-  username = < username >;
-  password = < password >;
+ 
+  hide = true;
+  baseUrl = '';
+  username = '';
+  password = '';
+  endpoint = '';
+
+  riskBody = {
+    'conjunction': {
+      'type': 'cdm.json',
+      'content': ''
+    }
+  }
+
+  riskBodyString = '';
+  resultString = '';
   
   token: any;
   header: any;
@@ -19,36 +31,39 @@ export class AppComponent {
   request: any;
   result: any;
 
-  constructor(okapi: OkapiService,
-              file: FileService ) {
-    okapi.authorize(this.username, this.password).then(
+  constructor(private okapi: OkapiService,
+              private file: FileService ) {
+  }
+
+  authorize(): void {
+    this.okapi.authorize(this.username, this.password).then(
       (value) => {
         this.header = value;
         this.token = value['access_token'];
-        const riskBody = {
-          'conjunction': {
-            'type': 'cdm.json',
-            'content': ''
-          }
-        }
-        file.getJSON().subscribe(
-          (fileContent) => {
-            riskBody.conjunction.content = fileContent[0];
-            okapi.getRequest(this.baseUrl,'/estimate-risk/alfano-2005/requests', JSON.stringify(riskBody)).subscribe(
-              (requestResponse) => {
-                this.request_id = requestResponse['request_id'];
-                this.request = requestResponse;
-                okapi.getResult(this.baseUrl,'/estimate-risk/alfano-2005/results', this.request, 'simple').subscribe(
-                  (resultResponse) => {
-                    // console.log(resultResponse);
-                    this.result = JSON.stringify(resultResponse['risk_estimations']);
-                  }
-                );
-              }
-            );
+      });
+  }
+
+  loadCDM(): void {
+    this.file.getJSON().subscribe(
+      (fileContent) => {
+        this.riskBody.conjunction.content = fileContent[0];
+        this.riskBodyString = JSON.stringify(this.riskBody);
+      });
+  }
+
+  send(): void {
+    this.okapi.getRequest(this.baseUrl, this.endpoint + '/requests', JSON.stringify(this.riskBody)).subscribe(
+      (requestResponse) => {
+        this.request_id = requestResponse['request_id'];
+        this.request = requestResponse;
+        this.okapi.getResult(this.baseUrl, this.endpoint + '/results', this.request, 'simple').subscribe(
+          (resultResponse) => {
+            // console.log(resultResponse);
+            this.result = resultResponse['risk_estimations'];
+            this.resultString = JSON.stringify(this.result);
           }
         );
-      }
-    );
+      });
   }
+
 }

@@ -58,7 +58,8 @@ export class OkapiService {
           headers: {
             'Content-Type': this.okapiToken['Content-Type'],
             Accept: this.okapiToken.Accept,
-            access_token: this.okapiToken.access_token,
+            access_token: this.okapiToken.access_token, // Legacy
+            Authorization: 'Bearer ' + this.okapiToken.access_token,
             expires_in: this.okapiToken.expires_in,
             token_type: this.okapiToken.token_type,
             scope: this.okapiToken.scope,
@@ -73,7 +74,8 @@ export class OkapiService {
           headers: {
             'Content-Type': this.okapiToken['Content-Type'],
             Accept: this.okapiToken.Accept,
-            access_token: this.okapiToken.access_token,
+            access_token: this.okapiToken.access_token, // Legacy
+            Authorization: 'Bearer ' + this.okapiToken.access_token,
             expires_in: this.okapiToken.expires_in,
             token_type: this.okapiToken.token_type,
             scope: this.okapiToken.scope,

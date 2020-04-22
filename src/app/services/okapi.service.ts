@@ -6,7 +6,7 @@ import { retryWhen, concatMap, delay, flatMap } from 'rxjs/operators';
 export interface AccessToken {
   "Content-Type": string;
   Accept: string;
-  access_token: string;
+  Authorization: string;
   expires_in: string;
   token_type: string;
   scope: string;
@@ -20,7 +20,7 @@ export class OkapiService {
   okapiToken: AccessToken = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    access_token: '',
+    Authorization: '',
     expires_in: '',
     token_type: '',
     scope: ''
@@ -43,7 +43,7 @@ export class OkapiService {
     return new Promise((resolve) => {
       this.http.post(auth0Url, postBody, { responseType: 'json' }).subscribe(
         (val) => {
-          this.okapiToken.access_token = val['access_token'];
+          this.okapiToken.Authorization = 'Bearer ' + val['access_token'];
           this.okapiToken.expires_in = val["expires_in"];
           this.okapiToken.token_type = val['token_type'];
           this.okapiToken.scope = val['scope'];
@@ -58,7 +58,7 @@ export class OkapiService {
           headers: {
             'Content-Type': this.okapiToken['Content-Type'],
             Accept: this.okapiToken.Accept,
-            access_token: this.okapiToken.access_token,
+            Authorization: this.okapiToken.Authorization,
             expires_in: this.okapiToken.expires_in,
             token_type: this.okapiToken.token_type,
             scope: this.okapiToken.scope,
@@ -73,7 +73,7 @@ export class OkapiService {
           headers: {
             'Content-Type': this.okapiToken['Content-Type'],
             Accept: this.okapiToken.Accept,
-            access_token: this.okapiToken.access_token,
+            Authorization: this.okapiToken.Authorization,
             expires_in: this.okapiToken.expires_in,
             token_type: this.okapiToken.token_type,
             scope: this.okapiToken.scope,

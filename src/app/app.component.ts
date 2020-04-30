@@ -12,9 +12,9 @@ import { PlotlyService } from 'angular-plotly.js';
 export class AppComponent implements OnInit {
 
   hide = true;
-  baseUrl = 'http://192.168.254.101:31002';
-  username = 'raving_dog@web.de';
-  password = 'dogsaccount18#';
+  baseUrl = 'http://platform.okapiorbits.com';
+  username = '';
+  password = '';
 
   riskBody = {
     conjunction: {

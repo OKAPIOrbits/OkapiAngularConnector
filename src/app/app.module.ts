@@ -8,7 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyModule } from 'angular-plotly.js';
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -22,7 +28,10 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatInputModule,
     MatGridListModule,
-    FormsModule
+    MatBadgeModule,
+    MatExpansionModule,
+    FormsModule,
+    PlotlyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

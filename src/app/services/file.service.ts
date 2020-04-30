@@ -7,14 +7,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FileService {
 
-  private _jsonURL = 'assets/cdm.json';
+  // private _jsonURL = 'assets/cdm.json';
 
   constructor(private http: HttpClient) {
-    this.getJSON().subscribe(data => {
-    });
+    // this.getJSON().subscribe(data => {
+    // });
   }
 
-  public getJSON(): Observable<any> {
-    return this.http.get(this._jsonURL);
+  public getJSON(jsonURL): Observable<any> {
+    return this.http.get(jsonURL);
   }
 }

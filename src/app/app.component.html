@@ -1,44 +1,126 @@
 <div class="example-container">
     <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Enter your username</mat-label>
-            <input matInput [(ngModel)]="username">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Enter your password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-        </mat-form-field>
-        <button (click)="authorize()" mat-button>Authorize</button>
+       <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        OKAPI:Platform Login 
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        The token is valid for 24 hours
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter your username</mat-label>
+                    <input matInput [(ngModel)]="username">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button (click)="authorize()" mat-button>Authorize</button>
+                <div>
+                    <mat-form-field appearance="fill">
+                        <textarea matInput [(ngModel)]="token"></textarea>
+                    </mat-form-field>
+                </div>    
+            </mat-expansion-panel>
+        </mat-accordion>
     </div>
-    <div>
-        <mat-form-field appearance="fill">
-            <textarea matInput [(ngModel)]="token"></textarea>
-        </mat-form-field>
-    </div>
+    <h2>1. USSpaceCOM Data</h2>
     <div>
         <button (click)="loadCDM()" mat-button>Load CDM</button>
-        <div>
-            <pre>{{ riskBody | json }}</pre>
-        </div>
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        CDM Data
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        json formatted Conjunction Data Message
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <pre>{{ riskBody | json }}</pre>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
     </div>
+    <p>Collision Probability: <span *ngIf="collisionProbability < 0.0001" matBadge="." matBadgeColor="primary" matBadgeOverlap="false">{{ collisionProbability }}</span> <span *ngIf="collisionProbability > 0.0001" matBadge="!!" matBadgeColor="warn" matBadgeOverlap="false">{{ collisionProbability }}</span></p>
+    <p>Close Approach {{ toTCA }}</p>
+    <h2>2. OKAPI Refinement</h2>
     <div>
         <mat-form-field appearance="fill">
-            <mat-label>Enter backend IP and Port</mat-label>
-            <input matInput type="text" [(ngModel)]="baseUrl">
+            <mat-label>Enter own hard body radius / m</mat-label>
+            <input matInput type="text" [(ngModel)]="sat1HardBodyRadiusOverride">
         </mat-form-field>
         <mat-form-field appearance="fill">
-            <mat-label>Enter endpoint</mat-label>
-            <input matInput type="text" [(ngModel)]="endpoint">
+            <mat-label>Enter radial override / km</mat-label>
+            <input matInput type="text" [(ngModel)]="radialOverride">
         </mat-form-field>
-        <button (click)="send()" mat-button>Send request</button>
+        <button (click)="sendRiskEstimationRequest()" mat-button>Risk Estimation Request</button>
     </div>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    OKAPI Response
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{ request_id }}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                <pre>{{ result | json }}</pre>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <p>OKAPI collision probability: <span *ngIf="newCollisionProbability < 0.0001" matBadge="." matBadgeColor="primary" matBadgeOverlap="false">{{ newCollisionProbability }}</span> <span *ngIf="newCollisionProbability > 0.0001" matBadge="!!" matBadgeColor="warn" matBadgeOverlap="false">{{ newCollisionProbability }}</span></p>
+    <h2>3. OKAPI AI</h2>
+    Forecast how the risk is going to change over time!
     <div>
-        <pre>{{ request_id }}</pre>
+        <button (click)="sendRiskPredictionRequest()" mat-button>Risk Prediction Request</button>
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        OKAPI Response
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{ prediction_request_id }}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <pre>{{ prediction_result | json }}</pre>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
     </div>
-    <div>
-        <pre>{{ result | json }}</pre>
-    </div>
+    <p>OKAPI predicted collision probability: <span *ngIf="newPredictedCollisionProbability < 0.0001" matBadge="." matBadgeColor="primary" matBadgeOverlap="false">{{ newPredictedCollisionProbability }}</span> <span *ngIf="newPredictedCollisionProbability > 0.0001" matBadge="!!" matBadgeColor="warn" matBadgeOverlap="false">{{ newPredictedCollisionProbability }}</span></p>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    OKAPI Forecast
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{ prediction_request_id }}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                <plotly-plot divId="graphDivID" [data]="graph.data" [useResizeHandler]="true" [style]="{position: 'relative', width: '100%', height: '100%'}" [layout]="graph.layout"></plotly-plot>
+            </div>
+            <div><button (click)="loadCDM1()" mat-button>Load CDM 1</button>
+                <button (click)="loadCDM2()" mat-button>Load CDM 2</button>
+                <button (click)="loadCDM3()" mat-button>Load CDM 3</button>
+                <button (click)="loadCDM4()" mat-button>Load CDM 4</button>
+                <button (click)="loadCDM5()" mat-button>Load CDM 5</button>
+                <button (click)="loadCDM6()" mat-button>Load CDM 6</button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <!-- <button (click)="loadAllCDMs()" mat-button>Load all CDMs</button> -->
 </div>

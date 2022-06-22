@@ -11,3 +11,6 @@ You need to have npm installed, e.g. from npmjs.org or on macOS you can use brew
 After cloning please run `npm install`.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+# NOTE
+This repository is currently not maintained. For a more recent version, please contact sven@okapiorbits.com
